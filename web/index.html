@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>YOLO Detection Demo</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:40px;
+    background:#f5f5f5;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+img{
+    max-width:100%;
+    border:1px solid #ccc;
+    margin-top:10px;
+}
+
+.result-box{
+    background:white;
+    padding:20px;
+    margin-top:20px;
+    border-radius:8px;
+}
+
+pre{
+    background:#eee;
+    padding:10px;
+    overflow:auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>YOLO Detection Demo</h2>
+
+<input type="file" id="imageInput">
+<br><br>
+
+<button onclick="uploadImage()">Detect</button>
+
+<div class="result-box">
+
+<h3>YOLO Result</h3>
+<pre id="result"></pre>
+
+<h3>Viz 640</h3>
+<img id="viz640">
+
+<h3>Viz Original</h3>
+<img id="vizOrg">
+
+</div>
+
+</div>
+
+
+<script>
+
+async function uploadImage(){
+
+    const fileInput = document.getElementById("imageInput")
+
+    if(fileInput.files.length === 0){
+        alert("Please choose an image")
+        return
+    }
+
+    const file = fileInput.files[0]
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await fetch("http://localhost:8000/detect",{
+        method:"POST",
+        body:formData
+    })
+
+    const data = await response.json()
+
+    // show result json
+    document.getElementById("result").textContent =
+        JSON.stringify(data.result, null, 2)
+
+    // show images
+    document.getElementById("viz640").src =
+        "data:image/png;base64," + data.viz_640
+
+    document.getElementById("vizOrg").src =
+        "data:image/png;base64," + data.viz_org
+}
+
+</script>
+
+</body>
+</html>
