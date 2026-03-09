@@ -1,8 +1,8 @@
 import onnxruntime as ort
 import numpy as np
 import cv2
-from ..api.config import YOLO_ONNX, YOLO_CLASSES
-from ..inference import utils
+from app.src.api.config import YOLO_ONNX, YOLO_CLASSES
+from app.src.inference import utils
 
 session = ort.InferenceSession(YOLO_ONNX)
 input_name = session.get_inputs()[0].name
@@ -17,11 +17,9 @@ def detect(img):
     img = img.transpose(2,0,1)
     img = img.astype(np.float32) / 255.0
     img = img[None]
-
     outputs = session.run(None, {input_name: img})
 
     return img, outputs
-
 
 def process(img):
     """
@@ -55,7 +53,7 @@ def process(img):
     nms_pred[:, :4] = boxes_scaled
     
     for p in nms_pred:
-        utils.draw_bbox(img, p, cls_dict,thickness=2, fontScale=2.0)
+        utils.draw_bbox(img, p, cls_dict,thickness=1, fontScale=1.0)
         
     # viz_resized = resized_img
     # viz_org = cv2.resize(resized_img, (org_width, org_height))

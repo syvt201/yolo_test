@@ -86,8 +86,7 @@ def scale_boxes(img1_shape, boxes, img0_shape, gain, pad_w, pad_h):
 
     return boxes
 
-
 def draw_bbox(img, pred, cls_dict, thickness=1, fontScale=0.5):
     x1, y1, x2, y2, score, class_id = pred
-    cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), thickness)
-    cv2.putText(img, f"{cls_dict[int(class_id)]} {score:.2f}", (int(x2), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 255, 0), thickness=thickness)
+    cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), thickness)
+    cv2.putText(img, f"{cls_dict[int(class_id)]} {score:.2f}", (int(x2), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 0, 190), thickness=thickness)

@@ -1,11 +1,17 @@
 from fastapi import FastAPI, UploadFile
 import cv2
 import numpy as np
-from ..inference import yolo_inference
+from app.src.inference import yolo_inference
 import base64
 from fastapi.middleware.cors import CORSMiddleware
+from app.src.logging.logging_config import setup_logging
+import logging
 
+setup_logging()
+logger = logging.getLogger(__name__)
 app = FastAPI()
+logger.info("Application started")
+print(logging.getLogger().handlers)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],   # dev only
