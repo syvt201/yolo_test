@@ -1,5 +1,3 @@
-import numpy as np
-
 import cv2
 import numpy as np
 
@@ -62,7 +60,7 @@ def letterbox(
 
     return img, r, (dw, dh)
 
-def scale_boxes(img1_shape, boxes, img0_shape):
+def scale_boxes(img1_shape, boxes, img0_shape, gain, pad_w, pad_h):
     """
     Rescale bounding boxes from img1_shape to img0_shape
 
@@ -71,10 +69,10 @@ def scale_boxes(img1_shape, boxes, img0_shape):
     img0_shape : original image shape (H,W)
     """
 
-    gain = min(img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1])
+    # gain = min(img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1])
 
-    pad_w = (img1_shape[1] - img0_shape[1] * gain) / 2
-    pad_h = (img1_shape[0] - img0_shape[0] * gain) / 2
+    # pad_w = (img1_shape[1] - img0_shape[1] * gain) / 2
+    # pad_h = (img1_shape[0] - img0_shape[0] * gain) / 2
 
     boxes[:, [0,2]] -= pad_w
     boxes[:, [1,3]] -= pad_h

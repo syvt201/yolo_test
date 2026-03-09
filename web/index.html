@@ -54,10 +54,8 @@ pre{
 
 <button onclick="uploadImage()">Detect</button>
 
-<div class="result-box">
 
 <h3>YOLO Result</h3>
-<pre id="result"></pre>
 
 <h3>Viz 640</h3>
 <img id="viz640">
@@ -65,6 +63,8 @@ pre{
 <h3>Viz Original</h3>
 <img id="vizOrg">
 
+<div class="result-box">
+<pre id="result"></pre>
 </div>
 
 </div>
@@ -92,17 +92,17 @@ async function uploadImage(){
     })
 
     const data = await response.json()
+    
+    // show images
+    document.getElementById("viz640").src =
+    "data:image/png;base64," + data.viz_640
+    
+    document.getElementById("vizOrg").src =
+    "data:image/png;base64," + data.viz_org
 
     // show result json
     document.getElementById("result").textContent =
         JSON.stringify(data.result, null, 2)
-
-    // show images
-    document.getElementById("viz640").src =
-        "data:image/png;base64," + data.viz_640
-
-    document.getElementById("vizOrg").src =
-        "data:image/png;base64," + data.viz_org
 }
 
 </script>

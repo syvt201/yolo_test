@@ -14,15 +14,13 @@ with open(YOLO_CLASSES, "r") as f:
         cls_dict[int(cls_id)] = cls.strip()
             
 def detect(img):
-    # resized_img = cv2.resize(img,(640,640))
-    img_letterbox, r, (dw,dh) = utils.letterbox(img, (640,640))
-    img = img_letterbox.transpose(2,0,1)
+    img = img.transpose(2,0,1)
     img = img.astype(np.float32) / 255.0
     img = img[None]
 
     outputs = session.run(None, {input_name: img})
 
-    return img_letterbox, outputs
+    return img, outputs
 
 
 def process(img):
@@ -34,8 +32,9 @@ def process(img):
     if isinstance(img, str):
         img = cv2.imread(img)
     
-    org_height, org_width = img.shape[:2]
-    resized_img, outputs = detect(img)
+    resized_img, gain, (dw,dh) = utils.letterbox(img, (640,640))
+    _, outputs = detect(resized_img)
+    
     output = outputs[0][0]
     
     nms_pred = nms(output)
@@ -47,8 +46,12 @@ def process(img):
     boxes_scaled = utils.scale_boxes(
         (640,640),
         boxes.copy(),
-        img.shape[:2]
+        img.shape[:2],
+        gain,
+        dw, 
+        dh
     )
+    
     nms_pred[:, :4] = boxes_scaled
     
     for p in nms_pred:
