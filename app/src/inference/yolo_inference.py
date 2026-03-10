@@ -3,9 +3,12 @@ import numpy as np
 import cv2
 from app.src.api.config import YOLO_ONNX, YOLO_CLASSES
 from app.src.inference import utils
+import logging
 
 session = ort.InferenceSession(YOLO_ONNX)
 input_name = session.get_inputs()[0].name
+
+logger = logging.getLogger(__name__)
 
 cls_dict = {}
 with open(YOLO_CLASSES, "r") as f:
@@ -27,20 +30,29 @@ def process(img):
         output: YOLO output, shape (no_detections, (x1, y2, x2, y2, score, class_id))
         , viz_resized, viz_org
     """
+    logger.info(f"Start processing image, shape={img.shape}")
     if isinstance(img, str):
+        logger.info(f"Reading image from {img}")
         img = cv2.imread(img)
     
+    logger.info("Letterbox resize: original_shape=(%d,%d), target=(640,640)", img.shape[0], img.shape[1])
     resized_img, gain, (dw,dh) = utils.letterbox(img, (640,640))
+    
+    logger.info("Detect bboxes")
     _, outputs = detect(resized_img)
+    logger.info("Raw detections: %d", len(output))
     
     output = outputs[0][0]
-    
+    logger.info("Apply NMS")
     nms_pred = nms(output)
+    logger.info("Detections after NMS: %d", len(nms_pred))
     
     for p in nms_pred:
         utils.draw_bbox(resized_img, p, cls_dict)
         
     boxes = nms_pred[:, :4]
+    
+    logger.info("Postprocess bboxes")
     boxes_scaled = utils.scale_boxes(
         (640,640),
         boxes.copy(),
@@ -58,6 +70,7 @@ def process(img):
     # viz_resized = resized_img
     # viz_org = cv2.resize(resized_img, (org_width, org_height))
     
+    logger.info("Processing finished, final detections=%d", len(nms_pred))
     return nms_pred, resized_img, img
 
 def nms(pred):
