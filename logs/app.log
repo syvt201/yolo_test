@@ -1,11 +1,13 @@
-2026-03-10 23:18:53,516 | INFO | app.src.api.main | Application started
-2026-03-10 23:19:02,702 | INFO | app.src.api.main | Received request: street.jpg
-2026-03-10 23:19:02,708 | INFO | app.src.api.main | Encoded image, (width, height)=(1000, 570)
-2026-03-10 23:19:02,708 | INFO | app.src.inference.yolo_inference | Start processing image, shape=(570, 1000, 3)
-2026-03-10 23:19:02,708 | INFO | app.src.inference.yolo_inference | Letterbox resize: original_shape=(570,1000), target=(640,640)
-2026-03-10 23:19:02,808 | INFO | app.src.inference.yolo_inference | Raw detections: 300
-2026-03-10 23:19:02,809 | INFO | app.src.inference.yolo_inference | Apply NMS
-2026-03-10 23:19:02,809 | INFO | app.src.inference.yolo_inference | Detections after NMS: 12
-2026-03-10 23:19:02,809 | INFO | app.src.inference.yolo_inference | Postprocess bboxes
-2026-03-10 23:19:02,810 | INFO | app.src.inference.yolo_inference | Processing finished, final detections=12
-2026-03-10 23:19:02,818 | INFO | app.src.api.main | Request processed in 0.116 seconds
+2026-03-10 23:28:23,797 | INFO | app.src.inference.yolo_inference | ONNX session created
+2026-03-10 23:28:23,798 | INFO | app.src.inference.yolo_inference | Load 80 YOLO's classes
+2026-03-10 23:28:23,798 | INFO | app.src.api.main | Application started
+2026-03-10 23:29:23,141 | INFO | app.src.api.main | Received request: street.jpg
+2026-03-10 23:29:23,147 | INFO | app.src.api.main | Encoded image, (width, height)=(1000, 570)
+2026-03-10 23:29:23,147 | INFO | app.src.inference.yolo_inference | Start processing image, shape=(570, 1000, 3)
+2026-03-10 23:29:23,147 | INFO | app.src.inference.yolo_inference | Letterbox resize: original_shape=(570,1000), target=(640,640)
+2026-03-10 23:29:23,255 | INFO | app.src.inference.yolo_inference | Raw detections: 300
+2026-03-10 23:29:23,255 | INFO | app.src.inference.yolo_inference | Apply NMS
+2026-03-10 23:29:23,255 | INFO | app.src.inference.yolo_inference | Detections after NMS: 12
+2026-03-10 23:29:23,256 | INFO | app.src.inference.yolo_inference | Postprocess bboxes
+2026-03-10 23:29:23,256 | INFO | app.src.inference.yolo_inference | Processing finished, final detections=12
+2026-03-10 23:29:23,266 | INFO | app.src.api.main | Request processed in 0.125 seconds

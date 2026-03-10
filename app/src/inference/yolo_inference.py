@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 session = ort.InferenceSession(YOLO_ONNX)
 input_name = session.get_inputs()[0].name
+
 logger.info("ONNX session created")
 
 cls_dict = {}

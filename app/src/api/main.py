@@ -1,15 +1,17 @@
 from fastapi import FastAPI, UploadFile
 import cv2
 import numpy as np
-from app.src.inference import yolo_inference
 import base64
 from fastapi.middleware.cors import CORSMiddleware
-from app.src.logging.logging_config import setup_logging
 import logging
+from app.src.logging.logging_config import setup_logging
 import time
 
 setup_logging()
 logger = logging.getLogger("app.src.api.main")
+
+from app.src.inference import yolo_inference
+
 app = FastAPI()
 logger.info("Application started")
 
