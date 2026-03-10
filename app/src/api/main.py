@@ -6,9 +6,10 @@ import base64
 from fastapi.middleware.cors import CORSMiddleware
 from app.src.logging.logging_config import setup_logging
 import logging
+import time
 
 setup_logging()
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app.src.api.main")
 app = FastAPI()
 logger.info("Application started")
 
@@ -25,20 +26,37 @@ def encode_image(img):
 
 @app.post("/detect")
 async def detect(file: UploadFile):
+    start_time = time.time()
+    logger.info("Received request: %s", file.filename)
+
     img_bytes = await file.read()
 
     img = cv2.imdecode(
         np.frombuffer(img_bytes,np.uint8),
         cv2.IMREAD_COLOR
     )
+    if img is None:
+        logger.error("Image decode failed")
+        return {"error": "Invalid image"}
+    
+    logger.info("Encoded image, (width, height)=(%d, %d)", img.shape[1], img.shape[0])
 
-    yolo_result, viz_640, viz_org = yolo_inference.process(img)
+    try:
 
-    viz640_b64 = encode_image(viz_640)
-    vizorg_b64 = encode_image(viz_org)
+        yolo_result, viz_640, viz_org = yolo_inference.process(img)
 
-    return {
-        "result": yolo_result.tolist(),
-        "viz_640": viz640_b64,
-        "viz_org": vizorg_b64
-    }
+        viz640_b64 = encode_image(viz_640)
+        vizorg_b64 = encode_image(viz_org)
+
+        duration = time.time() - start_time
+        logger.info("Request processed in %.3f seconds", duration)
+
+        return {
+            "result": yolo_result.tolist(),
+            "viz_640": viz640_b64,
+            "viz_org": vizorg_b64
+        }
+
+    except Exception as e:
+        logger.exception("Error during inference: %s", str(e))
+        return {"error": "Inference failed"}

@@ -5,17 +5,19 @@ from app.src.api.config import YOLO_ONNX, YOLO_CLASSES
 from app.src.inference import utils
 import logging
 
+logger = logging.getLogger(__name__)
 session = ort.InferenceSession(YOLO_ONNX)
 input_name = session.get_inputs()[0].name
-
-logger = logging.getLogger(__name__)
+logger.info("ONNX session created")
 
 cls_dict = {}
 with open(YOLO_CLASSES, "r") as f:
     for line in f:
         cls_id, cls = line.split(",")
         cls_dict[int(cls_id)] = cls.strip()
-            
+
+logger.info("Load %d YOLO's classes", len(cls_dict))
+
 def detect(img):
     img = img.transpose(2,0,1)
     img = img.astype(np.float32) / 255.0
@@ -38,9 +40,8 @@ def process(img):
     logger.info("Letterbox resize: original_shape=(%d,%d), target=(640,640)", img.shape[0], img.shape[1])
     resized_img, gain, (dw,dh) = utils.letterbox(img, (640,640))
     
-    logger.info("Detect bboxes")
     _, outputs = detect(resized_img)
-    logger.info("Raw detections: %d", len(output))
+    logger.info("Raw detections: %d", len(outputs[0][0]))
     
     output = outputs[0][0]
     logger.info("Apply NMS")

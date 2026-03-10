@@ -11,7 +11,6 @@ def setup_logging(
     formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(name)s | %(message)s")
     
     if os.path.exists(log_path):
-        print(f"Remove {log_path}")
         os.remove(log_path)
         
     console_handler = logging.StreamHandler()
