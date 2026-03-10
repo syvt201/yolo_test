@@ -10,6 +10,10 @@ def setup_logging(
     log_path = os.path.join(log_dir, log_file)
     formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(name)s | %(message)s")
     
+    if os.path.exists(log_path):
+        print(f"Remove {log_path}")
+        os.remove(log_path)
+        
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     
@@ -23,7 +27,11 @@ def setup_logging(
     file_handler.setFormatter(formatter)
     
     root_logger = logging.getLogger()
-    root_logger.setLevel(log_level)
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+    
+    numeric_level = getattr(logging, log_level.upper(), logging.INFO)
+    root_logger.setLevel(numeric_level)
     
     if root_logger.hasHandlers():
         root_logger.handlers.clear()

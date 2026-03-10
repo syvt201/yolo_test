@@ -11,7 +11,7 @@ setup_logging()
 logger = logging.getLogger(__name__)
 app = FastAPI()
 logger.info("Application started")
-print(logging.getLogger().handlers)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],   # dev only
