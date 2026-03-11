@@ -6,8 +6,20 @@ from app.src.inference import utils
 import logging
 
 logger = logging.getLogger(__name__)
-session = ort.InferenceSession(YOLO_ONNX)
+# session = ort.InferenceSession(YOLO_ONNX)
+
+providers = [
+    "CUDAExecutionProvider",
+    "CPUExecutionProvider"
+]
+
+session = ort.InferenceSession(
+    "model.onnx",
+    providers=providers
+)
 input_name = session.get_inputs()[0].name
+
+print("Using provider:", session.get_providers())
 
 logger.info("ONNX session created")
 
