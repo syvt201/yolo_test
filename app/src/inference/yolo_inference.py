@@ -14,7 +14,7 @@ providers = [
 ]
 
 session = ort.InferenceSession(
-    "model.onnx",
+    YOLO_ONNX,
     providers=providers
 )
 input_name = session.get_inputs()[0].name
