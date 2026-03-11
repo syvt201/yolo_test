@@ -1,24 +1,32 @@
-FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
+# Sử dụng base image CUDA 12.2 (hoặc 12.4 tùy bạn)
+FROM nvidia/cuda:12.2.2-runtime-ubuntu22.04
 
 WORKDIR /yolo
 
-# cài python
-RUN apt-get update && apt-get install -y --no-install-recommends\
+# Cài đặt Python và các thư viện hệ thống cần thiết cho OpenCV/YOLO
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     libgl1 \
     libglib2.0-0 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# alias python
+# CÀI ĐẶT CUDNN 9 (Đây là phần quan trọng nhất)
+# Chúng ta cài đặt repo của NVIDIA và install libcudnn9 cho cuda 12
+RUN curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb -o cuda-keyring.deb \
+    && dpkg -i cuda-keyring.deb \
+    && apt-get update \
+    && apt-get install -y libcudnn9-cuda-12 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Alias python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 COPY requirements-gpu.txt .
-
 RUN pip install --no-cache-dir -r requirements-gpu.txt
 
 COPY app ./app
-
 RUN mkdir -p logs
 
 EXPOSE 8000
